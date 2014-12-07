@@ -17,7 +17,20 @@ class HomeController extends BaseController {
 
 	public function showWelcome()
 	{
-		return View::make('hello');
+        $coordinates = Search::getGeoLocation(getenv('DEFAULT_ADDRESS'));
+
+
+        // Setup OAuth token and secret
+        Twitter::setOAuthToken(getenv('TWITTER_ACCESS_TOKEN'));
+        Twitter::setOAuthTokenSecret(getenv('TWITTER_TOKEN_SECRET'));
+
+        $tweets = Twitter::searchTweets(null, $coordinates['lat'] . ',' . $coordinates['lng'] . ',50km');
+
+
+        //var_dump($tweets);
+        return View::make('index')->with(array(
+            'coordinates' => $coordinates,
+        ));
 	}
 
 }

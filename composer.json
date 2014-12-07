@@ -7,7 +7,8 @@
 	"require": {
 		"laravel/framework": "4.2.*",
 		"guzzle/guzzle": "~3.0",
-		"way/generators": "~2.0"
+		"way/generators": "~2.0",
+        "philo/laravel-twitter": "dev-master"
 	},
 	"autoload": {
 		"classmap": [
@@ -35,5 +36,5 @@
 	"config": {
 		"preferred-install": "dist"
 	},
-	"minimum-stability": "stable"
+	"minimum-stability": "dev"
 }
