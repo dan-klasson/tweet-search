@@ -12,6 +12,7 @@ return array(
 	'TWITTER_RESULT_AMOUNT' => 50,
 	'TWITTER_RESULT_DISTANCE' => 50,
 	'TWITTER_RESULT_UNIT'	=> 'km',
+	'DB_ENGINE'				=> 'mysql',
 	'DB_HOST'				=> 'localhost',
 	'DB_USER'				=> 'root',
 	'DB_NAME'				=> 'tweet',
