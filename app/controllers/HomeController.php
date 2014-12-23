@@ -36,7 +36,7 @@ class HomeController extends BaseController {
 				return View::make('error')->withError($error);
 			}
 
-			if(!$tweets = Tweet::get($coordinates)) {
+			if(!$tweets = Tweet::get($city, $coordinates)) {
 				$error = "Twitter is not responding, please try again later.";
 				return View::make('error')->withError($error);
 			}

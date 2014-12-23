@@ -22,7 +22,7 @@ class Tweet extends \Eloquent {
 		}
 	}
 
-	public static function get($coordinates)
+	public static function get($city, $coordinates)
 	{
 
 		Tweet::connect();
@@ -33,7 +33,7 @@ class Tweet extends \Eloquent {
 		try
 		{
 		$tweets = Twitter::searchTweets(
-			null, 
+			$city, 
 			$coordinate_str,
 			null, 
 			null, 
