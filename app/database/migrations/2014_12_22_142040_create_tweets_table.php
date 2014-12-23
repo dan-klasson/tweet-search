@@ -17,8 +17,8 @@ class CreateTweetsTable extends Migration {
 			$table->engine = 'InnoDB';
 		    $table->increments('id', true);
 		    $table->integer('search_id')->unsigned();
-			$table->char('username', 50);
-			$table->string('tweet', 140);
+			$table->char('username', 100);
+			$table->string('tweet', 300);
 			$table->string('profile_pic', 240);
 			$table->char('geo_lat', 50);
 			$table->char('geo_lng', 50);
