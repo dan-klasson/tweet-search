@@ -69,6 +69,7 @@ return array(
 			'database'  => getenv('DB_NAME'),
 			'username'  => getenv('DB_USER'),
 			'password'  => getenv('DB_PWD'),
+			'port'		=> getenv('DB_PORT'),
 			'charset'  => 'utf8',
 			'prefix'   => '',
 			'schema'   => 'public',

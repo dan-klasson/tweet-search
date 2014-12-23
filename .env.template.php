@@ -14,6 +14,7 @@ return array(
 	'TWITTER_RESULT_UNIT'	=> 'km',
 	'DB_ENGINE'				=> 'mysql',
 	'DB_HOST'				=> 'localhost',
+	'DB_PORT'				=> '',
 	'DB_USER'				=> 'root',
 	'DB_NAME'				=> 'tweet',
 	'DB_PWD'				=> '',
