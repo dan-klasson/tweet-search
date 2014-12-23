@@ -17,7 +17,7 @@ class Search extends \Eloquent {
         }
         catch(Exception $e)
         {
-            Log::error('Environment variables not set');
+            Log::error('Google Maps environment variables not set');
             return false;
         }
 
@@ -27,7 +27,7 @@ class Search extends \Eloquent {
         }
         catch(Exception $e)
         {
-            Log::error($e);
+            Log::error('Could not connect to Google Maps: ' . $e);
             return false;
         }
 

@@ -15,22 +15,61 @@ class HomeController extends BaseController {
 	|
 	*/
 
-	public function showWelcome()
+	public function index()
 	{
-        $coordinates = Search::getGeoLocation(getenv('DEFAULT_ADDRESS'));
-
-
-        // Setup OAuth token and secret
-        Twitter::setOAuthToken(getenv('TWITTER_ACCESS_TOKEN'));
-        Twitter::setOAuthTokenSecret(getenv('TWITTER_TOKEN_SECRET'));
-
-        $tweets = Twitter::searchTweets(null, $coordinates['lat'] . ',' . $coordinates['lng'] . ',50km');
-
-
-        //var_dump($tweets);
-        return View::make('index')->with(array(
-            'coordinates' => $coordinates,
-        ));
+		return $this->search(getenv('DEFAULT_ADDRESS'));
 	}
 
+	public function search($city)
+	{
+
+		$search = Search::with('tweets')->where('city', '=', strtolower($city))
+					->where('created_at', '>', \Carbon\Carbon::now()->subDay())->first();
+
+		$error = false;
+
+		if(!$search)
+		{
+			if(!$coordinates = Search::getGeoLocation($city))
+			{
+				$error = "No city could be found by that name";
+				return View::make('error')->withError($error);
+			}
+
+			if(!$tweets = Tweet::get($coordinates)) {
+				$error = "Twitter is not responding, please try again later.";
+				return View::make('error')->withError($error);
+			}
+
+			$tweet_objects = [];
+			foreach($tweets as $id => $tweet)
+			{
+				$tweet_objects[$id] = new Tweet(array(
+					'username'		=> $tweet['username'],
+					'tweet'			=> $tweet['tweet'],
+					'profile_pic'	=> $tweet['profile_pic'],
+					'geo_lat'		=> $tweet['geo_lat'],
+					'geo_lng'		=> $tweet['geo_lng']
+				));
+			}
+			$search = new Search;
+			$search->city = $city;
+			$search->geo_lat = $coordinates['lat'];
+			$search->geo_lng = $coordinates['lng'];
+			$search->save();
+			$search->tweets()->saveMany($tweet_objects);
+		}
+		else {
+			$coordinates['lat'] = $search->geo_lat;
+			$coordinates['lng'] = $search->geo_lng;
+			$tweets = $search->tweets->toArray();
+		}
+
+		return View::make('index')->with(array(
+			'coordinates' => $coordinates,
+			'contents' => $tweets,
+			'error' => $error,
+			'city' => $city,
+		));
+	}
 }

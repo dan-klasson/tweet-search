@@ -1,57 +1,164 @@
 @extends('layouts.master')
 
+@section('title')
+Tweets for {{ $city }}
+@stop
+
 @section('head')
-    <style type="text/css">
-      html, body, #map-canvas { height: 100%; margin: 0; padding: 0;}
-    </style>
-    <script type="text/javascript"
-      src="https://maps.googleapis.com/maps/api/js?key={{ getenv('GOOGLE_MAPS_API_KEY') }}">
-    </script>
-    <script type="text/javascript">
-    function initialize()
-    {
-/*
-        var myLatlng = new google.maps.LatLng({{ $coordinates['lat'] }},{{ $coordinates['lng']}});
-        var mapOptions = {
-            zoom: 8,
-            center: myLatlng
-         };
+<style type="text/css">
+html, body, #map-canvas { 
+	height: 90%; 
+	width: 85%; 
+	margin: 0px; 
+	padding 0px; 
+}
+.list-group {
+	width: 300px;
+	display: none;
+}
+.header-text {
+	position: absolute;
+	z-index: 5;
+	top: 0;
+	padding: 20px;
+	left: 20%;
+	color: blue;
+	font-size: 30px;
+}
+</style>
 
-          var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+<script type="text/javascript">
 
+@if(!$error)
+jQuery(function($) {
+    // Asynchronously Load the map API 
+    var script = document.createElement('script');
+    script.src = "http://maps.googleapis.com/maps/api/js?sensor=false&callback=initialize";
+    document.body.appendChild(script);
 
- var imageBounds = new google.maps.LatLngBounds(myLatlng, myLatlng);
-  historicalOverlay = new google.maps.GroundOverlay(
-      'http://pbs.twimg.com/profile_images/539811188402442240/BreorRyD_normal.jpeg',
-      imageBounds);
-  historicalOverlay.setMap(map);
+	var url = '{{ url() }}'; // current URL
 
-*/
-  var newark = new google.maps.LatLng(40.740, -74.18);
-  var imageBounds = new google.maps.LatLngBounds(
-      new google.maps.LatLng(40.712216, -74.22655),
-      new google.maps.LatLng(40.733941, -74.20544));
+	// Blue overlay text on map
+	var headerText = 'TWEETS ABOUT ' + '{{ $city }}'.toUpperCase();
+	$(".header-text").html(headerText);
 
-  var mapOptions = {
-    zoom: 13,
-    center: newark
-  };
+	// Close history menu
+	$('.list-group').on('click', '#close-history', function (event) {
+		$( ".list-group" ).hide();
+	});
 
-  var map = new google.maps.Map(document.getElementById('map-canvas'),
-      mapOptions);
+	// Populate history menu
+	$( "#history" ).on('click', function(e) {
+		var cookies = $.cookie("searches");
+		cookies = cookies.split(",");
+		$(".list-group").html('');
+		$(".list-group").append('<a href="#" class="list-group-item" id="close-history">&lt; BACK TO THE TWEETS</a>');
+		$.each( cookies, function( key, city ) {
+			$(".list-group").append('<a href="' + url + '/' + city.toLowerCase() + '" class="list-group-item">' + city + '</a>');
+		});
+		$( ".list-group" ).show();
+	});
 
-  historicalOverlay = new google.maps.GroundOverlay(
-      'http://pbs.twimg.com/profile_images/539811188402442240/BreorRyD_normal.jpeg',
-      imageBounds);
-  historicalOverlay.setMap(map);
+	// Set cookie and forward user to new URL
+	$( "form" ).submit(function(e) {
+		var city = $("input[name='city']").val();
 
-      }
-      google.maps.event.addDomListener(window, 'load', initialize);
-    </script>
+		// make first letter uppercase
+		city = city.charAt(0).toUpperCase() + city.slice(1);
+
+		var cookies = $.cookie("searches");
+
+		if(typeof cookies !== 'undefined')
+		{
+			cookies = cookies.split(",");
+			if($.inArray(city, cookies) == -1)
+			{
+				cookies.push(city);
+			}
+		}
+		else
+		{
+			cookies = city;
+		}
+
+		$.cookie("searches", cookies);
+		window.location.replace(url + '/' + city.toLowerCase());
+		e.preventDefault();
+	});
+});
+
+function initialize() {
+	var map;
+	var position;
+	var markers = [];
+	var infoWindowContent = [];
+	var bounds = new google.maps.LatLngBounds();
+	var myLatlng = new google.maps.LatLng({{ $coordinates['lat'] }},{{ $coordinates['lng']}});
+	var mapOptions = {
+		zoom: 12,
+		center: myLatlng,
+	};
+
+	// Display a map on the page
+	map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+
+	// Pouplate the markers
+	var infoWindow = new google.maps.InfoWindow(), marker, i;
+	infoWindowContent.push('<div class="info_content">');
+	//infoWindowContent.push('<div class="info_content">');
+	@foreach($contents as $content)
+		markers.push([
+			'{{ $content["username"]}}', 
+			'{{ $content["geo_lat"] }}', 
+			'{{ $content["geo_lng"] }}', 
+			'{{ $content["profile_pic"] }}'
+		]);
+
+		infoWindowContent.push([
+			'<div class="info_content">' +
+			'<h3>{{ $content["username"]}}</h3>' +
+			'<p>{{ $content["tweet"]}}</p><p><i>{{ $content["created_at"]}}' + '</div>'
+		]);
+	@endforeach
+
+	// Display the multiple markers on the map
+	var infoWindow = new google.maps.InfoWindow(), marker, i;
+
+	// Loop through our array of markers & place each one on the map
+	for( i = 0; i < markers.length; i++ ) {
+		var position = new google.maps.LatLng(markers[i][1], markers[i][2]);
+		bounds.extend(position);
+		marker = new google.maps.Marker({
+			position: position,
+			map: map,
+			title: markers[i][0],
+			icon: markers[i][3],
+		});
+
+        // Allow each marker to have an info window
+        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            return function() {
+                infoWindow.setContent(infoWindowContent[i][0]);
+                infoWindow.open(map, marker);
+            }
+        })(marker, i));
+    }
+}
+</script>
+
+@endif
 
 @stop
 
 
 @section('content')
- <div id="map-canvas"></div>
+
+<div id="map-canvas"></div>
+
+<div class="header-text"></div>
+
+<div class="list-group"></div>
+
+@include('search_form')
+
 @stop

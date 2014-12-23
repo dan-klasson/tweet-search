@@ -8,7 +8,8 @@
 		"laravel/framework": "4.2.*",
 		"guzzle/guzzle": "~3.0",
 		"way/generators": "~2.0",
-        "philo/laravel-twitter": "dev-master"
+        "philo/laravel-twitter": "dev-master",
+		"barryvdh/laravel-debugbar": "~1.8@dev"
 	},
 	"autoload": {
 		"classmap": [
