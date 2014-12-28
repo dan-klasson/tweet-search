@@ -64,40 +64,40 @@ class Search extends \Eloquent {
 	 * @param string Address or city
 	 * @return array|false Geo Locations on success and false on no results
 	*/
-    public static function getGeoLocation($address)
-    {
-        try
-        {
-            $uri = sprintf(getenv('GOOGLE_GEO_API_URI'),
-                    $address, getenv('GOOGLE_MAPS_API_KEY'));
-        }
-        catch(Exception $e)
-        {
-            Log::error('Google Maps environment variables not set');
-            return false;
-        }
+	public static function getGeoLocation($address)
+	{
+		try
+		{
+			$uri = sprintf(getenv('GOOGLE_GEO_API_URI'),
+					$address, getenv('GOOGLE_MAPS_API_KEY'));
+		}
+		catch(Exception $e)
+		{
+			Log::error('Google Maps environment variables not set');
+			return false;
+		}
 
-        try
-        {
-            $client = new \Guzzle\Service\Client($uri);
-        }
-        catch(Exception $e)
-        {
-            Log::error('Could not connect to Google Maps: ' . $e);
-            return false;
-        }
+		try
+		{
+			$client = new \Guzzle\Service\Client($uri);
+		}
+		catch(Exception $e)
+		{
+			Log::error('Could not connect to Google Maps: ' . $e);
+			return false;
+		}
 
-        $response = $client->get()->send();
-        $response = $response->json();
+		$response = $client->get()->send();
+		$response = $response->json();
 
-        if(!empty($response['results']))
-        {
-            return $response['results'][0]['geometry']['location'];
-        }
-        else
-        {
-            // No results for that address
-            return false;
-        }
-    }
+		if(!empty($response['results']))
+		{
+			return $response['results'][0]['geometry']['location'];
+		}
+		else
+		{
+			// No results for that address
+			return false;
+		}
+	}
 }
