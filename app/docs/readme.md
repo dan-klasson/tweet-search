@@ -33,9 +33,10 @@ You should then be able to access the site using the following url:
 
 [http://localhost/tweet-search](http://localhost/tweet-search)
 
+## App Documentation
 
 #### Controllers & Routes
-* **index**: Displays the default city, as specified in **.env.php**. 
+* **index**: Displays the default city, as specified in `.env.php`. 
 * **search**: Does the actual search for a city a user performs.
 
 #### Models
@@ -43,8 +44,8 @@ You should then be able to access the site using the following url:
 * **Tweet**: is responsible for connecting, authenticating and fetching the tweets from the Twitter API.
 
 #### Views
-* **index**: Draws the profile pictures and tweets on the Google map using it's API. Uses **jQuery** to submit the form, and store and retrieve session data.
-* **searchform**: Displays the search form, submit and history button.
+* **index**: Draws the profile pictures and tweets on the Google map using it's API. Uses `jQuery` to submit the form, and store and retrieve session data.
+* **search_form**: Displays the search form, submit and history button.
 * **error**: Displays error messages (if any).
 
 #### Database & Migrations
