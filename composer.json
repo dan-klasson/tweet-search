@@ -26,6 +26,7 @@
 			"php artisan clear-compiled",
 			"php artisan optimize",
 			"chmod 777 app/storage -R",
+			"chmod 777 app/database/sqlite",
 			"php artisan migrate --force"
 		],
 		"post-update-cmd": [
