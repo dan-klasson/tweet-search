@@ -4,10 +4,10 @@ class Search extends \Eloquent {
 
 	protected $fillable = [];
 
-    public function tweets()
-    {
-        return $this->hasMany('Tweet');
-    }
+	public function tweets()
+	{
+		return $this->hasMany('Tweet');
+	}
 
 	/*
 	 * getLatestSearchByCity

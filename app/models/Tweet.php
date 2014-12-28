@@ -4,10 +4,10 @@ class Tweet extends \Eloquent {
 
 	protected $fillable = ['username', 'tweet', 'profile_pic', 'geo_lat', 'geo_lng'];
 
-    public function search()
-    {
-        return $this->belongsTo('Search');
-    }
+	public function search()
+	{
+		return $this->belongsTo('Search');
+	}
 
 	/*
 	 * connect
@@ -21,7 +21,7 @@ class Tweet extends \Eloquent {
 		try
 		{
 			Twitter::setOAuthToken(getenv('TWITTER_ACCESS_TOKEN'));
-	        Twitter::setOAuthTokenSecret(getenv('TWITTER_TOKEN_SECRET'));
+			Twitter::setOAuthTokenSecret(getenv('TWITTER_TOKEN_SECRET'));
 		}
 		catch(Exception $e)
 		{
