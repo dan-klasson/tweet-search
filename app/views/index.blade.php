@@ -29,6 +29,9 @@ html, body, #map-canvas {
 	color: blue;
 	font-size: 30px;
 }
+#history {
+	display: none;
+}
 .row {
 	position: absolute;
 	bottom: 0;
@@ -56,6 +59,12 @@ jQuery(function($) {
 	$('.list-group').on('click', '#close-history', function (event) {
 		$( ".list-group" ).hide();
 	});
+
+	// show the history button if the user has prior searches
+	if(typeof $.cookie("searches") !== 'undefined')
+	{
+		$('#history').show();
+	}
 
 	// Populate history menu
 	$( "#history" ).on('click', function(e) {
@@ -95,6 +104,7 @@ jQuery(function($) {
 		window.location.replace(url + '/' + city.toLowerCase());
 		e.preventDefault();
 	});
+
 });
 
 function initialize() {
