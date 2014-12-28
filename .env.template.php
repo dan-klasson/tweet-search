@@ -7,6 +7,7 @@
  * @return array Environment variables
  */
 return array(
+	'DEBUG'	=> false,
     'DEFAULT_ADDRESS' => 'bangkok',
     'GOOGLE_GEO_API_URI' => '',
     'GOOGLE_MAPS_API_KEY' => '',
