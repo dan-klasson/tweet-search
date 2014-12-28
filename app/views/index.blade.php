@@ -25,7 +25,7 @@ html, body, #map-canvas {
 	z-index: 5;
 	top: 0;
 	padding: 20px;
-	left: 20%;
+	left: 35%;
 	color: blue;
 	font-size: 30px;
 }
