@@ -1,19 +1,37 @@
 
-### HTML Form
-Build a simple HTML form (input text and submit button) where the user can search for a particular city.
+# Tweet-Search
 
-### Data Storage
-Store all user searches using cookies and database. 
-Check if the search result is already in the database. 
-Check if the stored results are older than 1 hour. If so, update the database so we have the latest results.
+This is a simple app I did as an assignment for [Gomeeki](http://gomeeki.com.au/). You can search tweets about a city, which is then displayed on a Google map of that city. Each search is stored in a database for caching reasons. There is also a history function of all searches the user have made.
 
-### API Calls
-Call an API of your choice to retrieve the coordinates of the city (Google, Bing, Open Street, …)
+Documentation can be found [here](https://github.com/dan-klasson/tweet-search/tree/master/app/docs)
 
-Call the Twitter API and only return results within 50km of the city. 
-Only store tweets that are returned with coordinate data. 
+## Installation
 
-### Screen Elements
-Show the tweets as markers on a map of your choice (Google, Bing, Open Street, …)
+#### Install dependencies (Ubuntu)
 
-Build a menu that allows users to access previous searches (using the cookie from Data Storage) and allow the user to perform searches based on this history.
+	sudo apt-get install php5 sqlite3 php5-sqlite
+
+#### App install instructions
+
+First you need to clone the app from the repository:
+
+	$ git clone https://github.com/dan-klasson/tweet-search
+	$ cd tweet-search/
+
+Then copy the template environment file and add the necessary information like API keys and tokens:
+
+    $ mv .env.template.php .env.php
+	$ vim .env.php
+
+You can then install the app by doing:
+
+	$ php composer.phar install
+
+If you're using `apache2` you might want to create a symlink from your public html folder to the public folder (Ubuntu):
+
+	$ sudo ln -s ../tweet-search /var/www/html/tweet-search/public
+
+You should then be able to access the site using the following url:
+
+[http://localhost/tweet-search](http://localhost/tweet-search)
+
