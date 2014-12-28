@@ -13,7 +13,7 @@ return array(
 	|
 	*/
 
-	'debug' => getenv('DEBUG'),
+	'debug' => getenv('DEBUG') === 'true' or getenv('DEBUG') === true ? true : false,
 
 	/*
 	|--------------------------------------------------------------------------
