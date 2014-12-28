@@ -44,7 +44,8 @@ class Search extends \Eloquent {
 				'tweet'			=> $tweet['tweet'],
 				'profile_pic'	=> $tweet['profile_pic'],
 				'geo_lat'		=> $tweet['geo_lat'],
-				'geo_lng'		=> $tweet['geo_lng']
+				'geo_lng'		=> $tweet['geo_lng'],
+				'created_at'	=> $tweet['created_at'],
 			));
 		}
 		$search = new Search;

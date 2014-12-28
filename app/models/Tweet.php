@@ -2,7 +2,8 @@
 
 class Tweet extends \Eloquent {
 
-	protected $fillable = ['username', 'tweet', 'profile_pic', 'geo_lat', 'geo_lng'];
+	protected $fillable = ['username', 'tweet', 'profile_pic', 'geo_lat', 'geo_lng', 'created_at'];
+	public $timestamps = false;
 
 	public function search()
 	{
@@ -49,14 +50,14 @@ class Tweet extends \Eloquent {
 
 		try
 		{
-		$tweets = Twitter::searchTweets(
-			$city, 
-			$coordinate_str,
-			null, 
-			null, 
-			getenv('TWITTER_RESULT_TYPE'),
-			getenv('TWITTER_RESULT_AMOUNT')
-		);
+			$tweets = Twitter::searchTweets(
+				$city, 
+				$coordinate_str,
+				null, 
+				null, 
+				getenv('TWITTER_RESULT_TYPE'),
+				getenv('TWITTER_RESULT_AMOUNT')
+			);
 		}
 		catch(Exception $e)
 		{
@@ -67,12 +68,14 @@ class Tweet extends \Eloquent {
 		$content = [];
 		foreach($tweets['statuses'] as $i => $tweet)
 		{
+			// Sun Dec 28 22:08:20 +0000 2014
+			$created_at = Carbon\Carbon::createFromFormat('D M d H:i:s O Y', $tweet['created_at']);
 			$content[$i]['tweet'] = $str = str_replace("\n", '', nl2br(htmlentities($tweet['text'], ENT_QUOTES, "UTF-8")));
 			$content[$i]['username'] = $tweet['user']['screen_name'];
 			$content[$i]['profile_pic'] = $tweet['user']['profile_image_url'];
 			$content[$i]['geo_lat'] = $tweet['geo']['coordinates'][0];
 			$content[$i]['geo_lng'] = $tweet['geo']['coordinates'][1];
-			$content[$i]['created_at'] = $tweet['created_at'];
+			$content[$i]['created_at'] = $created_at;
 		}
 		return $content;
 	}

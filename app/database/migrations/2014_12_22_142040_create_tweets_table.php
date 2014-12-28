@@ -22,11 +22,10 @@ class CreateTweetsTable extends Migration {
 			$table->string('profile_pic', 240);
 			$table->char('geo_lat', 50);
 			$table->char('geo_lng', 50);
-			$table->dateTime('updated_at');
 			$table->dateTime('created_at');
 		});
 		Schema::table('tweets', function($table) {
-		   $table->foreign('search_id')->references('id')->on('searches')->onDelete('cascade');
+		   $table->foreign('search_id')->references('id')->on('searches');
 	   });
 	}
 

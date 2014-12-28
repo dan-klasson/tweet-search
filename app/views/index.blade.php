@@ -136,7 +136,7 @@ function initialize() {
 		infoWindowContent.push([
 			'<div class="info_content">' +
 			'<h3>{{ $content["username"]}}</h3>' +
-			'<p>{{ $content["tweet"]}}</p><p><i>{{ $content["created_at"]}}' + '</div>'
+			'<p>{{ $content["tweet"]}}</p><p><i>{{ date("Y-m-d H:i", strtotime($content["created_at"]))}}' + '</div>'
 		]);
 	@endforeach
 
