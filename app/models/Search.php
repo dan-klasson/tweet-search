@@ -12,7 +12,7 @@ class Search extends \Eloquent {
 	/*
 	 * getLatestSearchByCity
 	 *
-	 * Returns any search that exist for a given city within the last 24h
+	 * Returns any search that exist for a given city within the last 1 hour
 	 *
 	 * @param array Coordinates to address or city
 	 * @return object
@@ -20,7 +20,7 @@ class Search extends \Eloquent {
 	public static function getLatestSearchByCity($city)
 	{
 		return parent::with('tweets')->where('city', '=', strtolower($city))
-					->where('created_at', '>', \Carbon\Carbon::now()->subDay())->first();
+					->where('created_at', '>', \Carbon\Carbon::now()->subHour())->first();
 	}
 
 
