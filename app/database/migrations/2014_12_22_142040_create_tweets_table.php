@@ -37,10 +37,6 @@ class CreateTweetsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::table('tweets', function(Blueprint $table)
-		{
-			$table->dropForeign('tweet_search_id_foreign');
-		});
 		Schema::drop('tweets');
 	}
 
