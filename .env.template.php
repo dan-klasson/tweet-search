@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Template for environment variables used
+ * This file needs to be copied and named .env.php
+ *
+ * @return array Environment variables
+ */
 return array(
     'DEFAULT_ADDRESS' => 'bangkok',
     'GOOGLE_GEO_API_URI' => '',

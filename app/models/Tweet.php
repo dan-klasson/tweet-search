@@ -1,6 +1,7 @@
 <?php
 
 class Tweet extends \Eloquent {
+
 	protected $fillable = ['username', 'tweet', 'profile_pic', 'geo_lat', 'geo_lng'];
 
     public function search()
@@ -8,9 +9,15 @@ class Tweet extends \Eloquent {
         return $this->belongsTo('Search');
     }
 
+	/*
+	 * connect
+	 *
+	 * Authenticates and connects to the Twitter API
+	 *
+	 * @return false on error
+	 */
 	private static function connect()
 	{
-        // Setup OAuth token and secret
 		try
 		{
 			Twitter::setOAuthToken(getenv('TWITTER_ACCESS_TOKEN'));
@@ -19,9 +26,19 @@ class Tweet extends \Eloquent {
 		catch(Exception $e)
 		{
 			Log::error('Could not connect to Twitter: ' . $e);
+			return false;
 		}
 	}
 
+	/*
+	 * get
+	 *
+	 * Returns tweets from a city where the city is mentioned
+	 *
+	 * @param string Address or city
+	 * @param array Coordinates to address or city
+	 * @return array|false Tweets on success or false on error
+	 */
 	public static function get($city, $coordinates)
 	{
 

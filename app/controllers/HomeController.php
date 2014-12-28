@@ -7,26 +7,36 @@ class HomeController extends BaseController {
 	| Default Home Controller
 	|--------------------------------------------------------------------------
 	|
-	| You may wish to use controllers instead of, or in addition to, Closure
-	| based routes. That's great! Here is an example controller method to
-	| get you started. To route to this controller, just add the route:
-	|
-	|	Route::get('/', 'HomeController@showWelcome');
-	|
 	*/
 
+
+	/*
+	 * index
+	 *
+	 * Index controller that displays the default address
+	 * as specified in the environment file
+	 *
+	 * @return object
+	 */
 	public function index()
 	{
 		return $this->search(getenv('DEFAULT_ADDRESS'));
 	}
 
+
+	/*
+	 * search
+	 *
+	 * Search controller that displays the address as
+	 * specified by the user
+	 *
+	 * @param string Address or city
+	 * @return object
+	 */
 	public function search($city)
 	{
 
-		$search = Search::with('tweets')->where('city', '=', strtolower($city))
-					->where('created_at', '>', \Carbon\Carbon::now()->subDay())->first();
-
-		$error = false;
+		$search = Search::getLatestSearchByCity($city);
 
 		if(!$search)
 		{
@@ -41,23 +51,7 @@ class HomeController extends BaseController {
 				return View::make('error')->withError($error);
 			}
 
-			$tweet_objects = [];
-			foreach($tweets as $id => $tweet)
-			{
-				$tweet_objects[$id] = new Tweet(array(
-					'username'		=> $tweet['username'],
-					'tweet'			=> $tweet['tweet'],
-					'profile_pic'	=> $tweet['profile_pic'],
-					'geo_lat'		=> $tweet['geo_lat'],
-					'geo_lng'		=> $tweet['geo_lng']
-				));
-			}
-			$search = new Search;
-			$search->city = $city;
-			$search->geo_lat = $coordinates['lat'];
-			$search->geo_lng = $coordinates['lng'];
-			$search->save();
-			$search->tweets()->saveMany($tweet_objects);
+			Search::saveSearch($city, $coordinates, $tweets);
 		}
 		else {
 			$coordinates['lat'] = $search->geo_lat;
@@ -68,7 +62,6 @@ class HomeController extends BaseController {
 		return View::make('index')->with(array(
 			'coordinates' => $coordinates,
 			'contents' => $tweets,
-			'error' => $error,
 			'city' => $city,
 		));
 	}

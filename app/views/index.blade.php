@@ -7,14 +7,18 @@ Tweets for {{ $city }}
 @section('head')
 <style type="text/css">
 html, body, #map-canvas { 
-	height: 90%; 
-	width: 85%; 
+	height: 100%; 
+	width: 100%; 
 	margin: 0px; 
 	padding 0px; 
 }
 .list-group {
+	position: absolute;
+	bottom: 20px;
+	left: 450px;
 	width: 300px;
 	display: none;
+	z-index: 5;
 }
 .header-text {
 	position: absolute;
@@ -25,11 +29,17 @@ html, body, #map-canvas {
 	color: blue;
 	font-size: 30px;
 }
+.row {
+	position: absolute;
+	bottom: 0;
+	z-index: 5;
+	width: 100%;
+	margin: 10px; 
+}
 </style>
 
 <script type="text/javascript">
 
-@if(!$error)
 jQuery(function($) {
     // Asynchronously Load the map API 
     var script = document.createElement('script');
@@ -105,7 +115,6 @@ function initialize() {
 	// Pouplate the markers
 	var infoWindow = new google.maps.InfoWindow(), marker, i;
 	infoWindowContent.push('<div class="info_content">');
-	//infoWindowContent.push('<div class="info_content">');
 	@foreach($contents as $content)
 		markers.push([
 			'{{ $content["username"]}}', 
@@ -146,7 +155,6 @@ function initialize() {
 }
 </script>
 
-@endif
 
 @stop
 
